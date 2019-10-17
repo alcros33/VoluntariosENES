@@ -18,7 +18,7 @@ with (BASE_DIR_PATH/"Root"/"SECRET.txt").open('r') as f:
     SECRET_KEY = f.read()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 if DEBUG:
     print("## WARNING: Running Server in DEBUG MODE!!!! ##")
