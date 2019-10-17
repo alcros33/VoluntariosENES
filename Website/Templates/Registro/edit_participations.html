@@ -1,0 +1,61 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Editar Equipos - {{evento.nombre}}{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block details %}
+<style>
+th, td {
+    padding: 15px;
+    color:white;
+}
+table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+  table {
+    margin-left: -100px;
+}
+</style>
+
+<div class="w3-container w3-dark-grey w3-center w3-text-light-grey w3-padding-32">
+    <h1><b>--Inscritos al Evento--</b></h1>
+    <div class="w3-content w3-justify" style="max-width:600px;">
+        <hr>
+        <h1> {{evento.nombre}} </h1><br>
+        <form method="post" enctype="multipart/form-data" id="editForm">
+        {% csrf_token %}
+        <table style="width:100%;">
+            <tr style="font-size:25px;">
+            <th>Nombre</th><th>Equipo</th><th>Es Capitán?</th>
+            </tr>
+            {{ formset.management_form }}
+            {% for form in formset %}
+            {{ form.id }}
+            <tr>
+            <td><a href = "{{form.instance.voluntario.get_absolute_url}}">{{form.instance.voluntario.nombre}}</a></td>
+                {% for field in form.visible_fields %}
+                    <td style="color:black!important;">{{ field }}</td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        <div style="text-align:right;">
+            <br>
+            <input class="btn btn-warning" type="button" value="Cancelar" onclick="CancelarGuardar()"/> &nbsp;&nbsp;&nbsp;&nbsp;
+            <input class="btn btn-success" type="button" value="Guardar" onclick="ConfirmarGuardar()"/>
+        </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+<form method="post" id="insform" class="insForm">'+"{% csrf_token %}"+'<label>Puestos en el evento</label></form>'+
+            '<select name="puesto" form="insform" id="eleccion">'+
+            '<option value="---"><b>---</b></option>'+
+            {% for puesto in evento.puestos %}
+                '<option value="{{puesto}}">{{puesto}}</option>'+
+            {% endfor %}
+            '</select>',

@@ -1,0 +1,42 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Editar - {{pTitle}}{% endblock %}
+
+{% block content %}{% endblock %}
+{% block pagination %}{% endblock %}
+
+{% block details %}
+<style>
+ul{
+    color:white;
+}
+</style>
+<div class="w3-container w3-dark-grey w3-center w3-text-light-grey w3-padding-32">
+    <h1><b>--Editar {{pTitle}}--</b></h1>
+    <div class="w3-content w3-justify" style="max-width:600px;">
+    <hr>
+        <form method="post" enctype="multipart/form-data" id="editForm">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+        <table >
+        {% for field in form.visible_fields %}
+        <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {{ field.errors }}
+          {{ field }}<br>
+          {% if field.help_text %}<small style="color:white">*{{ field.help_text | safe }}</small>{% endif %}
+        </td>
+        </tr>
+        {% endfor %}
+        </table> <br>
+        <div style="text-align:right;">
+        <input class="btn btn-warning" type="button" value="Cancelar" onclick="CancelarGuardar()"/> &nbsp;&nbsp;&nbsp;&nbsp;
+        <input class="btn btn-success" type="button" value="Guardar" onclick="ConfirmarGuardar()"/>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+  
+

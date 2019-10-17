@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+  <meta charset="UTF-8">
+  <title>Voluntarios ENES - {% block title %}{% endblock %}</title>
+  <link rel="shortcut icon" type="image/jpg"  href="/img/favicon.jpg">
+  
+  <!-- Default Bootstrap -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  
+  <!-- Jquery Confirm -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+  
+  <!-- Font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- Tema W3 -->
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+  
+    <!-- Add additional CSS in static file -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+  <style>
+/*   body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif} */
+  body,h1,h2,h3,h4,h5 {font-family: "Type Writter"}
+  .w3-third img{margin-bottom: -6px; opacity: 0.8; cursor: pointer}
+  .w3-third img:hover{opacity: 1}
+  h1{ font-weight: bold; }
+  table {
+    margin-left: -50px;
+    right: -50px;
+  }
+  th{
+    text-align:left;
+    padding: 10px;
+  }
+  td {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+    color: black;
+    font-weight: bold;
+  }
+  a.w3-bar-item:link,a.EventName:link{
+  text-decoration: none!important;
+  }
+  {% block ColorDetail %}{% endblock %}
+  </style>
+
+</head>
+
+<body class="w3-light-grey w3-content" style="max-width:1600px;background-color:#383736!important;">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center SideBAR" 
+style="z-index:3;width:300px;font-weight:bold;" id="mySidebar"><br>
+{% block sidebar %}{% endblock %}
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-top w3-hide-large w3-white w3-xlarge w3-padding-16">
+  <span class="w3-left w3-padding">Voluntarios ENES</span>
+  <a href="javascript:void(0)" class="w3-right w3-button w3-white" onclick="w3_open()" style="text-decoration: none!important;">&#9776;</a>
+</header>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;">
+
+  <!-- Push down content on small screens --> 
+  <div class="w3-hide-large" style="margin-top:83px"></div>
+  <!-- Photo grid -->
+  <div class="w3-row" >
+  {% block content %}{% endblock %}
+  </div>
+
+{% block details %}<br>{% endblock %}  
+
+<script>
+// Script to open and close sidebar
+function w3_open() {
+    document.getElementById("mySidebar").style.display = "block";
+    document.getElementById("myOverlay").style.display = "block";
+}
+ 
+function w3_close() {
+    document.getElementById("mySidebar").style.display = "none";
+    document.getElementById("myOverlay").style.display = "none";
+}
+
+// Modal Image Gallery
+function onClick(element) {
+  document.getElementById("img01").src = element.src;
+  document.getElementById("modal01").style.display = "block";
+  var captionText = document.getElementById("caption");
+  captionText.innerHTML = element.alt;
+}
+
+</script>
+
+<script>
+function CancelarGuardar(redirect = './')
+{
+    $.confirm(
+    {
+        title: '¿Salir sin Guardar?',
+        content :'',
+        animation: 'scale',
+        draggable: false,
+        buttons:
+        {
+            close:
+            {
+                text:'Cancelar',
+                action : function () { }
+            },
+            omg:
+            {
+                text: 'Salir',
+                btnClass: 'btn-warning',
+                action : function() { return window.location.href=redirect; }
+            }
+        }
+    });
+}
+function ConfirmarGuardar(message='¿Guardar Cambios?')
+{
+    $.confirm(
+    {
+        title: message,
+        content : '',
+        icon: 'fa fa-warning',
+        type: 'green',
+        animation: 'scale',
+        draggable: false,
+        buttons:
+        {
+            close:
+            {
+                text:'Cancelar',
+                action : function () { }
+            },
+            omg:
+            {
+                text: 'Guardar',
+                btnClass: 'btn-green',
+                action : function() { $("#editForm").submit();}
+            }
+        }
+    });
+}
+
+function CopyToClipboard (text) {
+	// Copies a string to the clipboard. Must be called from within an 
+	// event handler such as click. May return false if it failed, but
+	// this is not always possible. Browser support for Chrome 43+, 
+	// Firefox 42+, Safari 10+, Edge and IE 10+.
+	// IE: The clipboard feature may be disabled by an administrator. By
+	// default a prompt is shown the first time the clipboard is 
+	// used (per session).
+	if (window.clipboardData && window.clipboardData.setData) {
+		// IE specific code path to prevent textarea being shown while dialog is visible.
+		return clipboardData.setData("Text", text); 
+
+  } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+    var textarea = document.createElement("textarea");
+    textarea.textContent = text;
+    textarea.style.position = "fixed";  // Prevent scrolling to bottom of page in MS Edge.
+    document.body.appendChild(textarea);
+    textarea.select();
+
+    try {
+      return document.execCommand("copy");  // Security exception may be thrown by some browsers.
+    } catch (ex) {
+      console.warn("Copy to clipboard failed.", ex);
+      return false;
+    } finally {
+      document.body.removeChild(textarea);
+    }
+	}
+}
+</script>
+
+</body>
+
+</html>

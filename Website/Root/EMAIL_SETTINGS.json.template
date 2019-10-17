@@ -1,0 +1,9 @@
+{
+    "HOST" : "smtp.domain.net",
+    "PORT" : 587,
+    "USER" : "myuser",
+    "PASSWORD" : "mysecretpsswd",
+    "USE_TLS" : "True",
+    "DEFAULT_FROM" : "Test Team <noreply@example.com>",
+    "BACKEND" : "django.core.mail.backends.smtp.EmailBackend"
+}

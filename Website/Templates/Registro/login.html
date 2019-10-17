@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  
+  <title>Voluntarios ENES - Login</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <style>
+  body{
+    margin-left:10%;
+    margin-top:10%;
+}
+th{
+    text-align:left;
+    padding: 10px;
+}
+td {
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-bottom: 10px;
+}
+</style>
+  
+  <!-- Add additional CSS in static file -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+<div class="col-sm-10 ">
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+<table >
+        {% for field in form.visible_fields %}
+        <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {{ field.errors }}
+          {{ field }}<br>
+          {% if field.help_text %}<small>{{ field.help_text| safe }}</small>{% endif %}
+        </td>
+        </tr>
+        {% endfor %}
+        </table> <br>
+    <input type="submit" value="Login" />
+</form>
+<br>
+<p><a href="{% url 'password_reset' %}">Olvidaste tu contraseña?</a></p>
+<p><a href="{% url 'index' %}">No tienes Cuenta? Registrate</a></p>
+</div>
+
+</body>
+</html>

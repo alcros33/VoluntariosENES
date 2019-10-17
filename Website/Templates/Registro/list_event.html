@@ -1,0 +1,31 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{pTitle}}{% endblock %}
+
+{% block content %}
+<h1 style="text-align:center;">{{pTitle}}</h1>
+{% if event_list %}
+
+    {% for evento in event_list %}
+    <div class="w3-third">
+        {% load static %}
+        <a class = "EventName" href = "{{evento.get_absolute_url}}">
+        <h3 style="text-align:center;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;"><b>
+        {% if evento.activo %}[{{evento.fecha|date:"M d"}}]{% else %}[<i class="fa fa-close"></i>]{% endif %}</b> {{evento.nombre}}</h4>
+        <img src="{{evento.foto.url}}" style="width:100%;height:200px;" title = "{{evento.nombre}}"></a>
+    </div>
+    {% endfor %}
+    
+{% else %}
+    <p><b>No hay eventos.</b></p>
+{% endif %}
+
+{% endblock %}
+
+{% block details %}
+{% if user.is_organizador %}
+<hr>
+<div style ="text-align:center;"><input class="btn btn-primary" type="button" value="Crea un Evento!!" onclick="window.location.href='{% url 'new_event' %}'"/></div>
+<br>
+{% endif %}
+{% endblock %}

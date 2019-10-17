@@ -1,0 +1,40 @@
+{% extends "base_meta.html" %}
+
+{% block sidebar %}
+  {% if user.is_organizador %}
+  <h2><b>Organizador</b></h3>
+  {% load static %}
+  <img src="{{user.organizador.foto.url}}" style="width:80%;height:200px;text-align:center;"/><br>
+  <h3 class="w3-padding-64 w3-center"><b>{{ user.organizador.nombre }}</b></h3>
+  <a href="{% url 'home' %}" onclick="w3_close()" class="w3-bar-item w3-button">Eventos Activos</a> 
+  <a href="{{user.organizador.get_absolute_url}}" onclick="w3_close()" class="w3-bar-item w3-button">Mi Perfil</a> 
+  <a href="{% url 'my_events' %}" onclick="w3_close()" class="w3-bar-item w3-button">Mis Eventos</a>
+  {% else %}
+  <h2><b>Voluntario</b></h3>
+  {% load static %}
+  <img src="{{user.voluntario.foto.url}}" style="width:80%;height:200px;text-align:center;"/><br>
+  <h3 class="w3-padding-64 w3-center"><b>{{ user.voluntario.nombre }}</b></h3>
+  <a href="{% url 'home' %}" onclick="w3_close()" class="w3-bar-item w3-button">Eventos Activos</a> 
+  <a href="{{user.voluntario.get_absolute_url}}" onclick="w3_close()" class="w3-bar-item w3-button">Mi Perfil</a> 
+  {% endif %}
+  <a href="{% url 'old_events' %}" onclick="w3_close()" class="w3-bar-item w3-button">Eventos Archivados</a> 
+  <a href="{% url 'logout'%}" onclick="w3_close()" class="w3-bar-item w3-button">Cerrar Sesión</a>
+{% endblock %}
+
+{% block ColorDetail %}
+{% if user.is_organizador %}
+.w3-dark-grey,.w3-hover-dark-grey:hover,.w3-main{background-color:#383736!important; color:#f2b569!important;}
+
+.SideBAR { background-color:#f2b569!important; color:black!important; }
+
+a:link { text-decoration: underline; }
+a:hover { color: white; text-decoration: underline;}
+{% else %}
+.w3-dark-grey,.w3-hover-dark-grey:hover,.w3-main{background-color:#383736!important; color:#76bfc4!important;}
+
+.SideBAR { background-color:#76bfc4!important; color:black!important; }
+
+a:link { text-decoration: underline; }
+a:hover { color: white; text-decoration: underline;}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,11 @@
+{% autoescape off %}
+* Este es un correo automático, por favor no responder *
+
+Para reiniciar la contraseña de su cuenta {{ user.get_username }} de Voluntarios ENES Morelia
+click en el siguiente enlace:
+{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}
+Si hacer click no funciona, copie y pegue la dirección en su navegador.
+
+Sinceramente,
+Voluntarios ENES Morelia
+{% endautoescape %}

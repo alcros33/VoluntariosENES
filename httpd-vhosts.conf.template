@@ -1,0 +1,48 @@
+# Virtual Hosts
+#
+# Required modules: mod_log_config
+<VirtualHost *:80>
+#    ServerAdmin webmaster@localhost
+    ServerName [domain_name]
+
+    ErrorLog [path_to_project]/error.log
+    CustomLog [path_to_project]/custom.log combined
+    
+    DocumentRoot [path_to_project]/Website   
+
+    Alias /img [path_to_project]/Website/Img
+    <Directory [path_to_project]/Website/Img>
+        Require all granted
+    </Directory>
+
+    Alias /static [path_to_project]/Website/Static
+    <Directory [path_to_project]/Website/Static>
+        Require all granted
+    </Directory>
+
+    <Directory [path_to_project]/Website/Root>
+        Options Indexes FollowSymLinks Includes ExecCGI
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+        Require all granted
+    </Directory>
+
+    <Directory [path_to_project]/Website/Root>
+        <Files wsgi.py>
+            Require all granted
+        </Files>
+    </Directory>
+
+   WSGIDaemonProcess Root python-home=[path_to_project]/.env python-path=[path_to_project]/Website
+    WSGIProcessGroup Root
+    WSGIScriptAlias / [path_to_project]/Website/Root/wsgi.py
+
+    WSGIApplicationGroup %{GLOBAL}
+    
+    ErrorDocument 404 [path_to_project]/Website/Templates/404.html
+    ErrorDocument 500 [path_to_project]/Website/Templates/500.html
+
+</VirtualHost>
+
+ 

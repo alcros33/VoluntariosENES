@@ -1,0 +1,188 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{evento.nombre}}{% endblock %}
+
+{% block content %}{% endblock %}
+{% block pagination %}{% endblock %}
+
+{% block details %} 
+<div class="w3-container w3-dark-grey w3-center w3-text-light-grey w3-padding-32">
+    <h1><b>--Información del Evento--</b></h1>
+    <div class="w3-content w3-justify" style="max-width:600px;">
+    <hr>
+        <h1>{{evento.nombre}}</h1><br>
+        {% load static %}
+        <img src="{{evento.foto.url}}" style="width:100%;height:300px"/><br>
+        <hr>
+        <h1>{% if not evento.activo %}[<i class="fa fa-close"></i> Inscripciones Cerradas]{% endif %}</h1>
+            <p><b>Descripción  : </b> {{evento.descripcion}} </p>
+            
+            <p><b>Organizador  : </b> <a href="{{evento.organizador.get_absolute_url}}">{{evento.organizador.nombre}}</a> </p>
+            
+            <p><b>Fecha  : </b> {{evento.fecha}} </p>
+            <p><b>Lugar  : </b> {{evento.lugar}} </p>
+            <p><b>Equipos  : </b>{{evento.num_equipos}} </p>
+            {% if evento.url_pagina %}<p><b>Página del Evento  : </b> <a href="{{evento.url_pagina}}">{{evento.url_pagina}}</a></p>{% endif %} 
+        <hr>
+        
+        {% if user.id == evento.organizador.pk and user.is_organizador%}
+            <div style="text-align:right;">
+            {% if evento.activo %}
+                <input class="btn btn-success" type="button" value="Editar Información"
+                 onclick="window.location.href = '{% url 'edit_event' pk=evento.id %}'"/>
+                <form method="post" id="closeEvent" style="display: inline;">
+                <input type='hidden' name='ConfirmClose' value='Confirmado' />
+                {% csrf_token %}
+                &nbsp;&nbsp;&nbsp;&nbsp; <input class="btn btn-warning" type="button" value="Cerrar Inscripciones" onclick="CloseEvent()"/>
+                </form>
+            {% else %}
+                <input class="btn btn-success" type="button" value="Lista de Inscritos"
+                onclick="window.location.href = '{% url 'event_participations' pk=evento.id %}'"/>
+            {% endif %}
+            <form method="post" id="deleteEvent" style="display: inline;">
+            <input type='hidden' name='ConfirmDelete' value='Confirmado' />
+            {% csrf_token %}
+            &nbsp;&nbsp;&nbsp;&nbsp; <input class="btn btn-danger" type="button" value="Borrar Evento" onclick="DeleteEvent()"/>
+            </form>
+            </div>
+        {% endif %}
+        
+        {% if participacion %}
+            <p><b>Ya estás registrado como voluntario para este evento!</b></p>
+            <p><b>Equipo : </b>{{participacion.equipo}}
+            {% if evento.activo %}
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <form method="post" id="deleteIns">
+                <input type='hidden' name='ConfirmDel' value='Confirmado' />
+                {% csrf_token %}
+                <input class="btn btn-danger" type="button" value="Borrar Registro" onclick="Confirmar()"/>
+                </form></p>
+            {% endif %}
+        {% endif %}
+        {% if evento.activo and not participacion and user.is_voluntario %}
+            <input class="btn btn-success" type="button" value="Registrarse Como voluntario" onclick="Inscribir()"/>
+        {% endif %}
+    </div>
+</div>
+<script>
+{% if user.id == evento.organizador.pk and user.is_organizador %}
+    var msg = "¿Realmente Desea eliminar este evento?<br>Al hacerlo eliminará el registro de los voluntarios que se han inscrito.<br>"
+    msg += "Esta acción NO se puede deshacer."
+
+    function DeleteEvent()
+    {
+        $.confirm(
+        {
+            title: 'Eliminando Evento',
+            content: msg,
+            icon: 'fa fa-warning',
+            type: 'red',
+            animation: 'scale',
+            draggable: false,
+            buttons:
+            {
+                close:
+                {
+                    text:'Cancelar',
+                    action : function () { }
+                },
+                omg:
+                {
+                    text: 'Borrar',
+                    btnClass: 'btn-red',
+                    action : function() { $("#deleteEvent").submit();}
+                }
+            }
+        });
+    }
+
+    function CloseEvent()
+    {
+        $.confirm(
+        {
+            title: 'Cerrando Evento',
+            content: "¿Marcar como inactivo?<br>Podrá generar la lista de inscritos, pero cerrará las inscripciones<br>",
+            icon: 'fa fa-warning',
+            type: 'orange',
+            animation: 'scale',
+            draggable: false,
+            buttons:
+            {
+                close:
+                {
+                    text:'Cancelar',
+                    action : function () { }
+                },
+                omg:
+                {
+                    text: 'Cerrar',
+                    btnClass: 'btn-warning',
+                    action : function() { $("#closeEvent").submit();}
+                }
+            }
+        });
+    }
+{% endif %}
+
+{% if not participacion and user.is_voluntario %}
+    function Inscribir()
+    { 
+        $.confirm(
+        {
+            title: 'Inscribirse a {{evento.nombre}}?',
+            content: '<form method="post" id="insform" class="insForm">'+
+                '{% csrf_token %}'+
+                '<input type="hidden" name="ConfirmIns" value="Confirmado" />'+
+                '</form>',
+            type: 'green',
+            buttons:
+            {
+                cancel:
+                {
+                    action: function (){},
+                    text: "Cancelar"
+                },
+                formSubmit:
+                {
+                    text: 'Inscribirse',
+                    btnClass: 'btn-green',
+                    action: function ()
+                    {
+                        $.alert("Ya estás inscrito!");
+                        this.$content.find('#insform').submit();
+                    }
+                }
+            }
+        } );
+    }
+{% endif %}
+{% if participacion and user.is_voluntario %}
+    function Confirmar()
+    {
+        $.confirm(
+        {
+            title: 'Eliminando...',
+            content: "¿Seguro que desea eliminar su inscripción al evento?",
+            icon: 'fa fa-warning',
+            type: 'red',
+            animation: 'scale',
+            draggable: false,
+            buttons:
+            {
+                close:
+                {
+                    text:'Cancelar',
+                    action : function () {}
+                },
+                omg:
+                {
+                    text: 'Borrar',
+                    btnClass: 'btn-red',
+                    action : function() { $("#deleteIns").submit();}
+                }
+            }
+        });
+    }
+{% endif %}
+</script>
+{% endblock %}

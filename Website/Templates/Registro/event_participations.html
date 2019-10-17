@@ -1,0 +1,67 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Inscritos - {{evento.nombre}}{% endblock %}
+
+{% block content %}{% endblock %}
+
+{% block details %}
+<style>
+th, td {
+    padding: 15px;
+    color:white;
+}
+table, th, td {
+    border: 1px solid white;
+    border-collapse: collapse;
+}
+  table {
+    margin-left: -100px;
+}
+</style>
+
+<div class="w3-container w3-dark-grey w3-center w3-text-light-grey w3-padding-32">
+    <h1><b>--Inscritos al Evento--</b></h1>
+    <div class="w3-content w3-justify" style="max-width:600px;">
+    <hr>
+        <h1> {{evento.nombre}} </h1><br>
+        <table >
+        <tr style="font-size:25px;">
+        <th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Equipo</th><th>Es Capitán?</th>
+        </tr>
+        {% for p in inscritos %}
+        <tr>
+        <td><a href="{{p.voluntario.get_absolute_url}}">{{p.voluntario.nombre}}</a></td><td>{{p.voluntario.telefono}}</td><td class="EmailV">{{p.voluntario.email}}</td>
+        <td>{{p.equipo}}</td><td>{% if p.capitan %}<i class="fa fa-check"></i>{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div style="text-align:right;">
+    <br>
+    <input class="btn btn-warning" type="button" value="Editar Equipos"
+    onclick="window.location.href='{% url 'edit_participations' pk=evento.id %}'"/>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <input class="btn btn-success" type="button" value="Copiar Lista de Correos" onclick="CopiarCorreos()"/>
+    </div>
+    </div>
+</div>
+
+<script>
+function CopiarCorreos()
+{
+    var elements = document.getElementsByClassName("EmailV");
+    var correos = '';
+    for(var i=0; i<elements.length; i++)
+        correos += (elements[i].innerHTML + ',');
+    CopyToClipboard(correos);
+    $.alert(
+    {
+        title: 'Lista copiada al portapapeles!',
+        content : '',
+        type: 'green',
+        animation: 'scale',
+        draggable: false,
+    });
+}
+</script>
+
+{% endblock %}

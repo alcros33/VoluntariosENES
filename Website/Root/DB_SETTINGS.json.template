@@ -1,0 +1,10 @@
+{
+    "default" : {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "[Data_Base_Name]",
+        "USER": "[Data_Base_User]",
+        "PASSWORD": "[Data_Base_Password]",
+        "HOST": "localhost",
+        "PORT": ""
+    }
+}
